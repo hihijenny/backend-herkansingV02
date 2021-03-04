@@ -1,7 +1,10 @@
 const express = require('express')
+const ejs = require('ejs')
 
 express()
     .use('/static', express.static('static'))
+    .set('view engine', 'ejs')  //aangeven welke template engine we gebruiken
+    .set('views', 'view')   //aangeven in welke map de templates staan
     .get('/', onhome)
     .get('/about', onabout)
     .get('/contact', oncontact)
@@ -9,7 +12,7 @@ express()
     .listen(8000);
 
 function onhome(req, res) {
-    res.send('<h1>Home</h1>\n');
+    res.render('home.ejs', { title: 'homepagina'});
 }
 
 function onabout(req, res) {
