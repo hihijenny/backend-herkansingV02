@@ -1,5 +1,5 @@
 <%- include('head.ejs') %>
-<form action="/add" method="post"  enctype="multipart/form-data">
+<form action="/add" method="post" enctype="multipart/form-data">
 <label>
 	Naam
 	<input name="name">
@@ -12,8 +12,9 @@
 	Vertel iets over jezelf
 	<textarea name="about" rows="5" ></textarea>
 </label>
-<label> Upload een mooie foot
-<input type="file name="avatar">
+<label> 
+    Upload een mooie foto
+    <input type="file" name="avatar" accept="image/*">
 </label>
 
 <input type="submit" value="Toevoegen">

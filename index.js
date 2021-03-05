@@ -4,7 +4,17 @@ const slug = require('slug');
 const bodyParser = require('body-parser');
 const multer  = require('multer')
 const upload = multer({ dest: 'static/uploads/' })
+const mongo = require('mongodb')
 
+require('dotenv').config()
+
+let db = null;
+const url = 'mongodb+srv://JennyN:IkBenLeuk@cluster0.q5sp8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+
+mongo.MongoClient.connect(url, function(err, client) {
+    if (err) throw err; 
+    db = client.db("datingapp")
+})
 
 express()
     .use('/static', express.static('static'))
@@ -12,10 +22,9 @@ express()
     .set('views', 'view')   //aangeven in welke map de templates staan
     .use(bodyParser.urlencoded({extended:true}))
     .get('/', onhome)
-    .get('/about', onabout)
-    .get('/contact', oncontact)
     .get('/add', onadd)
     .post('/add', submit)
+    .get('/profiles', onprofiles)
     .get('*', on404)
     .listen(8000);
 
@@ -23,16 +32,25 @@ function onhome(req, res) {
     res.render('home.ejs', { title: 'homepagina'});
 }
 
-function onabout(req, res) {
-    res.send('<h1>Ik eet graag pasta</h1>\n');
-}
-
-function oncontact(req, res) {
-    res.send('<h1>Ik ben een Jenny</h1>\n');
-}
-
 function onadd(req, res) {
     res.render('keuzes.ejs');
+}
+
+function onprofiles(req, res) { 
+
+    db.collection('profiles') //pakt de collection profiles uit de db
+        .find().toArray(done) //pakt de info uit profiles en zet dit in een array
+
+    function done(err, data) { //maakt een function done aan en die word aangeroepen als de .toArray method klaar is. 
+        if (err) { // als er een error is laat die dan zien
+            next(err)
+        } else {
+            
+            res.render('profiles.ejs', { //render de template en geeft profiles mee als argument
+                profiles: data
+            })
+        }
+    }
 }
 
 function submit (req, res) {
