@@ -1,0 +1,22 @@
+<%- include('head.ejs') %>
+<form action="/add" method="post"  enctype="multipart/form-data">
+<label>
+	Naam
+	<input name="name">
+</label>
+<label>
+	Interesse
+	<input name="interest">
+</label>
+<label>
+	Vertel iets over jezelf
+	<textarea name="about" rows="5" ></textarea>
+</label>
+<label> Upload een mooie foot
+<input type="file name="avatar">
+</label>
+
+<input type="submit" value="Toevoegen">
+</form>
+<%- include('foot.ejs') %>
+
