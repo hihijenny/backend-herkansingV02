@@ -20,20 +20,18 @@ express()
     .use('/static', express.static('static'))
     .set('view engine', 'ejs')  //aangeven welke template engine we gebruiken
     .set('views', 'view')   //aangeven in welke map de templates staan
-    .use(bodyParser.urlencoded({extended:true}))
-    .get('/', onhome)
-    .get('/add', onadd)
+    .use(bodyParser.urlencoded({extended:false}))
+    .get('/', onadd)
     .post('/add', submit)
+    .get('/profile/:id', showprofile)
     .get('/profiles', onprofiles)
+    .get('/delete-profile/:id', ondeleteprofile)
     .get('*', on404)
     .listen(8000);
 
-function onhome(req, res) {
-    res.render('home.ejs', { title: 'homepagina'});
-}
 
 function onadd(req, res) {
-    res.render('keuzes.ejs');
+    res.render('newprofile.ejs');
 }
 
 function onprofiles(req, res) { 
@@ -45,7 +43,7 @@ function onprofiles(req, res) {
         if (err) { // als er een error is laat die dan zien
             next(err)
         } else {
-            
+             
             res.render('profiles.ejs', { //render de template en geeft profiles mee als argument
                 profiles: data
             })
@@ -54,16 +52,66 @@ function onprofiles(req, res) {
 }
 
 function submit (req, res) {
-    const id = slug(req.body.name).toLowerCase()
-    const about = req.body.about
-    const interest = req.body.interest
+    // const id = slug(req.body.name).toLowerCase()
+    const name = req.body.name;
+    const interest1 = req.body.interest1;
+    const interest2 = req.body.interest2;
+    const about = req.body.about;
 
-    console.log(id)
-    console.log(about)
-    console.log(interest)
-    //ingevoerde data naar de database sturen
+    console.log(name);
+    console.log(req.body);
 
-    res.redirect('/' + id)
+    db.collection('profiles') //pakt de collection profiles uit de db
+        .insert({
+            name: name, 
+            interest1: interest1,
+            interest2: interest2,
+            about: about
+        }, done);
+
+        function done(err, data) {
+            if (err) {
+                next(err)
+            } else {
+               const id = data.insertedIds[0]
+               res.redirect('/profile/' + id)
+            }
+        }
+}
+
+function showprofile(req, res) {
+    const id = req.params.id;
+
+    db.collection('profiles').findOne({
+        _id: mongo.ObjectID(id)
+    }, done)
+
+    function done(err, data) {
+        if (err) {
+            next(err)
+        } else {
+            res.render('yourprofile.ejs', { //render de template en geeft profiles mee als argument
+                profile: data
+            })
+        }
+    }
+}
+
+function ondeleteprofile(req, res) {
+    
+    const id = req.params.id;
+
+    db.collection('profiles').deleteOne({
+        _id: mongo.ObjectID(id)
+    }, done)
+    
+    function done(err) {
+        if (err) {
+            next(err)
+        } else {
+            res.redirect('/profiles')
+        }
+    }
 }
 
 function on404(req, res) { 

@@ -1,21 +1,25 @@
 <%- include('head.ejs') %>
-<form action="/add" method="post" enctype="multipart/form-data">
+<form action="/add" method="post">
 <label>
 	Naam
 	<input name="name">
-</label>
+</label> <br>
 <label>
-	Interesse
-	<input name="interest">
-</label>
+	Interesse 1
+	<input name="interest1">
+</label> <br>
+<label>
+	Interesse 2
+	<input name="interest2">
+</label> <br>
 <label>
 	Vertel iets over jezelf
 	<textarea name="about" rows="5" ></textarea>
-</label>
-<label> 
+</label> <br>
+<!-- <label> 
     Upload een mooie foto
     <input type="file" name="avatar" accept="image/*">
-</label>
+</label> -->
 
 <input type="submit" value="Toevoegen">
 </form>
