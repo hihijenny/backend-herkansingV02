@@ -1,0 +1,25 @@
+<%- include('head.ejs') %>
+
+<h1>Pas jouw interesses aan</h1>
+<h2>Name: <%= profile.name %></h2>
+<form action="/edit-profile" method="post">
+
+<label>
+	Interesse 1
+	<input name="interest1" value="<%= profile.interest1 %>">
+    
+</label> <br>
+<label>
+	Interesse 2
+	<input name="interest2" value="<%= profile.interest2 %>">
+</label> <br>
+<label>
+	Vertel iets over jezelf
+	<textarea name="about" rows="5" > <%= profile.about %></textarea>
+</label> <br>
+
+<input type="submit" value="Toevoegen">
+<input type="hidden" value="<%= profile._id %>" name="profile_id">
+</form>
+<%- include('foot.ejs') %>
+

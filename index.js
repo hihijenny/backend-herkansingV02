@@ -26,6 +26,8 @@ express()
     .get('/profile/:id', showprofile)
     .get('/profiles', onprofiles)
     .get('/delete-profile/:id', ondeleteprofile)
+    .get('/edit-profile/:id', onedit)
+    .post('edit-profile', saveprofile)
     .get('*', on404)
     .listen(8000);
 
@@ -97,6 +99,29 @@ function showprofile(req, res) {
     }
 }
 
+function saveprofile(req, res) {
+    const interest1 = req.body.interest1;
+    const interest2 = req.body.interest2;
+    const about = req.body.about;
+
+    db.collection('profiles') //pakt de collection profiles uit de db
+        .insert({
+            interest1: interest1,
+            interest2: interest2,
+            about: about
+        }, done);
+
+        function done(err, data) {
+            if (err) {
+                next(err)
+            } else {
+               const id = data.insertedIds[0]
+               res.redirect('/profile/' + id)
+            }
+        }
+
+}
+
 function ondeleteprofile(req, res) {
     
     const id = req.params.id;
@@ -110,6 +135,25 @@ function ondeleteprofile(req, res) {
             next(err)
         } else {
             res.redirect('/profiles')
+        }
+    }
+}
+
+function onedit(req, res) {
+
+    const id = req.params.id;
+
+    db.collection('profiles').findOne({
+        _id: mongo.ObjectID(id)
+    }, done)
+
+    function done(err, data) {
+        if (err) {
+            next(err)
+        } else {
+            res.render('edit-profile.ejs', { 
+                profile: data
+            })
         }
     }
 }
