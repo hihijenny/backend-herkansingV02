@@ -6,10 +6,10 @@ const multer  = require('multer')
 const upload = multer({ dest: 'static/uploads/' })
 const mongo = require('mongodb')
 
-require('dotenv').config()
+require('dotenv').config() //.env nog even fixen zodat niet iedereen mn ww ziet
 
 let db = null;
-const url = 'mongodb+srv://JennyN:IkBenLeuk@cluster0.q5sp8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+const url = 'mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@cluster0.q5sp8.mongodb.net/'+process.env.DB_NAME+'?retryWrites=true&w=majority';
 
 mongo.MongoClient.connect(url, function(err, client) {
     if (err) throw err; 
