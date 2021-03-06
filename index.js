@@ -3,31 +3,30 @@ const ejs = require('ejs');
 const bodyParser = require('body-parser');
 const mongo = require('mongodb')
 
-require('dotenv').config()
+require('dotenv').config() //Variabele in je .env zetten die niet mee gaat naar git maar wel kunnen ophalen in de code.
 
 let db = null;
 const url = 'mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@cluster0.q5sp8.mongodb.net/'+process.env.DB_NAME+'?retryWrites=true&w=majority';
 
 mongo.MongoClient.connect(url, function(err, client) {
     if (err) throw err; 
-    db = client.db("datingapp")
-})
+    db = client.db('datingapp');
+});
 
 express()
-    .use('/static', express.static('static'))
+    .use('/static', express.static('static')) //bestanden uit de static map naar de browser sturen
     .set('view engine', 'ejs')  //aangeven welke template engine we gebruiken
     .set('views', 'view')   //aangeven in welke map de templates staan
     .use(bodyParser.urlencoded({extended:false}))
-    .get('/', onadd)
-    .post('/add', submit)
-    .get('/profile/:id', showprofile)
-    .get('/profiles', onprofiles)
-    .get('/delete-profile/:id', ondeleteprofile)
-    .get('/edit-profile/:id', onedit)
-    .post('/edit-profile', saveprofile)
+    .get('/', onadd) //dit is de 'homepage' hier vult de gebruik zijn info in. 
+    .post('/add', submit) // Na verzenden van fomrulier kom je hier, voert submit functie uit. 
+    .get('/profile/:id', showprofile) //Laat een specifiek profiel zien op basis van Id
+    .get('/profiles', onprofiles) //Laat alle profielen zien
+    .get('/delete-profile/:id', ondeleteprofile) //Delete een specifiek profiel op basis van Id
+    .get('/edit-profile/:id', onedit) //edit een specifiek profiel op basis van Id
+    .post('/edit-profile', saveprofile) //Roept functie saveprofile aan om het profiel aan te passen in de database
     .get('*', on404)
     .listen(8000);
-
 
 function onadd(req, res) {
     res.render('newprofile.ejs');
@@ -36,29 +35,26 @@ function onadd(req, res) {
 function onprofiles(req, res) { 
 
     db.collection('profiles') //pakt de collection profiles uit de db
-        .find().toArray(done) //pakt de info uit profiles en zet dit in een array
+        .find().toArray(done); //pakt de info uit profiles en zet dit in een array
 
     function done(err, data) { //maakt een function done aan en die word aangeroepen als de .toArray method klaar is. 
         if (err) { // als er een error is laat die dan zien
-            next(err)
+            next(err);
         } else {
              
             res.render('profiles.ejs', { //render de template en geeft profiles mee als argument
                 profiles: data
-            })
+            });
         }
     }
 }
 
-function submit (req, res) {
+function submit(req, res) {
 
     const name = req.body.name;
     const interest1 = req.body.interest1;
     const interest2 = req.body.interest2;
     const about = req.body.about;
-
-    console.log(name);
-    console.log(req.body);
 
     db.collection('profiles') //pakt de collection profiles uit de db
         .insert({
@@ -70,10 +66,10 @@ function submit (req, res) {
 
         function done(err, data) {
             if (err) {
-                next(err)
+                next(err);
             } else {
-               const id = data.insertedIds[0]
-               res.redirect('/profile/' + id)
+               const id = data.insertedIds[0];
+               res.redirect('/profile/' + id);
             }
         }
 }
@@ -83,15 +79,15 @@ function showprofile(req, res) {
 
     db.collection('profiles').findOne({
         _id: mongo.ObjectID(id)
-    }, done)
+    }, done);
 
     function done(err, data) {
         if (err) {
-            next(err)
+            next(err);
         } else {
             res.render('yourprofile.ejs', { //render de template en geeft profiles mee als argument
                 profile: data
-            })
+            });
         }
     }
 }
@@ -99,7 +95,6 @@ function showprofile(req, res) {
 function saveprofile(req, res) {
 
     const id = req.body.profile_id; //pakken de id uit de hidden input field om die te updaten.
-    console.log(id)
     const interest1 = req.body.interest1;
     const interest2 = req.body.interest2;
     const about = req.body.about;
@@ -108,21 +103,13 @@ function saveprofile(req, res) {
         _id: mongo.ObjectID(id)},
         {
             $set: {
-                interest1: req.body.interest1,
-                interest2: req.body.interest2,
-                about: req.body.about
+                interest1: interest1,
+                interest2: interest2,
+                about: about
             }
-        }, { upsert: true })
+        }, { upsert: true });
     
-    // function done(err, data) {
-    //     if (err) {
-    //         next(err)
-    //     } else {
-    //         const id = data.insertedIds[0]
-    //         res.redirect('/profile/' + id)
-    //     }
-    // }
-        res.redirect('/profile/' + id)
+    res.redirect('/profile/' + id);
 }
 
 function ondeleteprofile(req, res) {
@@ -131,13 +118,13 @@ function ondeleteprofile(req, res) {
 
     db.collection('profiles').deleteOne({
         _id: mongo.ObjectID(id)
-    }, done)
+    }, done);
     
     function done(err) {
         if (err) {
-            next(err)
+            next(err);
         } else {
-            res.redirect('/profiles')
+            res.redirect('/profiles');
         }
     }
 }
@@ -148,20 +135,19 @@ function onedit(req, res) {
 
     db.collection('profiles').findOne({
         _id: mongo.ObjectID(id),
-    }, done)
+    }, done);
 
     function done(err, data) {
         if (err) {
-            next(err)
+            next(err);
         } else {
             res.render('edit-profile.ejs', { 
                 profile: data
-            })
+            });
         }
     }
 }
 
 function on404(req, res) { 
-    res.status(404).send('dit is een 404')
+    res.status(404).send('dit is een 404');
 }
-
