@@ -3,10 +3,10 @@ const ejs = require('ejs');
 const bodyParser = require('body-parser');
 const mongo = require('mongodb')
 
-require('dotenv').config() //Variabele in je .env zetten die niet mee gaat naar git maar wel kunnen ophalen in de code.
+require('dotenv').config(); //Variabele in je .env zetten die niet mee gaat naar git maar wel kunnen ophalen in de code.
 
 let db = null;
-const url = 'mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@cluster0.q5sp8.mongodb.net/'+process.env.DB_NAME+'?retryWrites=true&w=majority';
+const url = 'mongodb+srv://' + process.env.DB_USER + ':'+process.env.DB_PASS + '@cluster0.q5sp8.mongodb.net/' + process.env.DB_NAME + '?retryWrites=true&w=majority';
 
 mongo.MongoClient.connect(url, function(err, client) {
     if (err) throw err; 
@@ -51,14 +51,14 @@ function onprofiles(req, res) {
 
 function submit(req, res) {
 
-    const name = req.body.name;
+    const name = req.body.name; //Hier zetten we de ingestuurde data uit het formulier in variabelen
     const interest1 = req.body.interest1;
     const interest2 = req.body.interest2;
     const about = req.body.about;
 
     db.collection('profiles') //pakt de collection profiles uit de db
         .insert({
-            name: name, 
+            name: name, //zet het antwoord van de gebruiker in de database
             interest1: interest1,
             interest2: interest2,
             about: about
@@ -69,13 +69,13 @@ function submit(req, res) {
                 next(err);
             } else {
                const id = data.insertedIds[0];
-               res.redirect('/profile/' + id);
+               res.redirect('/profile/' + id); //redirect naar profile pagina + de Id 
             }
         }
 }
 
 function showprofile(req, res) {
-    const id = req.params.id;
+    const id = req.params.id; //pak de Id uit de URL 
 
     db.collection('profiles').findOne({
         _id: mongo.ObjectID(id)
@@ -107,7 +107,7 @@ function saveprofile(req, res) {
                 interest2: interest2,
                 about: about
             }
-        }, { upsert: true });
+        });
     
     res.redirect('/profile/' + id);
 }
