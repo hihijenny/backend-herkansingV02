@@ -1,12 +1,9 @@
 const express = require('express');
 const ejs = require('ejs');
-const slug = require('slug');
 const bodyParser = require('body-parser');
-const multer  = require('multer')
-const upload = multer({ dest: 'static/uploads/' })
 const mongo = require('mongodb')
 
-require('dotenv').config() //.env nog even fixen zodat niet iedereen mn ww ziet
+require('dotenv').config()
 
 let db = null;
 const url = 'mongodb+srv://'+process.env.DB_USER+':'+process.env.DB_PASS+'@cluster0.q5sp8.mongodb.net/'+process.env.DB_NAME+'?retryWrites=true&w=majority';
@@ -27,7 +24,7 @@ express()
     .get('/profiles', onprofiles)
     .get('/delete-profile/:id', ondeleteprofile)
     .get('/edit-profile/:id', onedit)
-    .post('edit-profile', saveprofile)
+    .post('/edit-profile', saveprofile)
     .get('*', on404)
     .listen(8000);
 
@@ -54,7 +51,7 @@ function onprofiles(req, res) {
 }
 
 function submit (req, res) {
-    // const id = slug(req.body.name).toLowerCase()
+
     const name = req.body.name;
     const interest1 = req.body.interest1;
     const interest2 = req.body.interest2;
@@ -100,26 +97,32 @@ function showprofile(req, res) {
 }
 
 function saveprofile(req, res) {
+
+    const id = req.body.profile_id; //pakken de id uit de hidden input field om die te updaten.
+    console.log(id)
     const interest1 = req.body.interest1;
     const interest2 = req.body.interest2;
     const about = req.body.about;
-
-    db.collection('profiles') //pakt de collection profiles uit de db
-        .insert({
-            interest1: interest1,
-            interest2: interest2,
-            about: about
-        }, done);
-
-        function done(err, data) {
-            if (err) {
-                next(err)
-            } else {
-               const id = data.insertedIds[0]
-               res.redirect('/profile/' + id)
+        
+    db.collection('profiles').updateOne({
+        _id: mongo.ObjectID(id)},
+        {
+            $set: {
+                interest1: req.body.interest1,
+                interest2: req.body.interest2,
+                about: req.body.about
             }
-        }
-
+        }, { upsert: true })
+    
+    // function done(err, data) {
+    //     if (err) {
+    //         next(err)
+    //     } else {
+    //         const id = data.insertedIds[0]
+    //         res.redirect('/profile/' + id)
+    //     }
+    // }
+        res.redirect('/profile/' + id)
 }
 
 function ondeleteprofile(req, res) {
@@ -144,7 +147,7 @@ function onedit(req, res) {
     const id = req.params.id;
 
     db.collection('profiles').findOne({
-        _id: mongo.ObjectID(id)
+        _id: mongo.ObjectID(id),
     }, done)
 
     function done(err, data) {

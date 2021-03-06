@@ -18,8 +18,8 @@
 	<textarea name="about" rows="5" > <%= profile.about %></textarea>
 </label> <br>
 
-<input type="submit" value="Toevoegen">
-<input type="hidden" value="<%= profile._id %>" name="profile_id">
+<input type="submit" value="Save">
+<input type="hidden" value="<%= profile._id %>" name="profile_id"> <!-- profile Id word meegegeven zodat we weten om welk profiel het gaat in de javascript-->
 </form>
 <%- include('foot.ejs') %>
 
