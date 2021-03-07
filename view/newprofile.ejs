@@ -1,27 +1,30 @@
 <%- include('head.ejs') %>
+<main>
+<section>
+
+	<h1>Tell us about yourself, what do you like?</h1>
+
 <form action="/add" method="post">
 <label>
-	Naam
-	<input name="name">
+	Naam:
+	<input type="text" name="name">
 </label> <br>
 <label>
-	Interesse 1
-	<input name="interest1">
+	Favorite food 1
+	<input type="text" name="interest1">
 </label> <br>
 <label>
-	Interesse 2
-	<input name="interest2">
+	Favorite food 2
+	<input type="text" name="interest2">
 </label> <br>
 <label>
-	Vertel iets over jezelf
+	Tell us about yourself
 	<textarea name="about" rows="5" ></textarea>
 </label> <br>
-<!-- <label> 
-    Upload een mooie foto
-    <input type="file" name="avatar" accept="image/*">
-</label> -->
 
 <input type="submit" value="Toevoegen">
 </form>
+</section>
+</main>
 <%- include('foot.ejs') %>
 

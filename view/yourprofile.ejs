@@ -1,16 +1,17 @@
 <%- include('head.ejs') %>
-
+<section>
     <h1>This is your profile</h1>
-    <p>You like, no?</p>
+    <p>Tell us about yourself, what do you like?</p>
 
   
         <h3>Name: <%= profile.name %> </h3> 
-        <h3>Interest: <%= profile.interest1 %> </h3>
-        <h3>Interest: <%= profile.interest2 %> </h3> 
-        <p>About: <%= profile.about %> </p> <br>
+        <h3>Favorite food 1: <%= profile.interest1 %> </h3>
+        <h3>Favorite food 2: <%= profile.interest2 %> </h3> 
+        <p>Tell us about yourself: <%= profile.about %> </p> <br>
         <a href="/delete-profile/<%= profile._id %>">Delete profile</a>
         <a href="/edit-profile/<%= profile._id %>">Edit your profile</a>
- 
+
+</section>
     
 <%- include('foot.ejs') %>
 

@@ -1,0 +1,20 @@
+* {
+    background-color:cornsilk;
+}
+
+section {
+    box-sizing: border-box;
+    width: 40%;
+    padding: 5%;
+    margin: auto;
+}
+
+input, textarea {
+   width: 90%;
+   background-color: white;
+   margin: 0 0 3%;
+   padding: 1%;
+   border: none;
+   border-radius: 5px;
+   
+}
