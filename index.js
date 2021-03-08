@@ -14,8 +14,8 @@ mongo.MongoClient.connect(url, function(err, client) {
 });
 
 express()
-    .use('/static', express.static('static')) //bestanden uit de static map naar de browser sturen
-    .set('view engine', 'ejs')  //aangeven welke template engine we gebruiken
+    .use('/static', express.static('static')) 
+    .set('view engine', 'ejs') 
     .set('views', 'view')   //aangeven in welke map de templates staan
     .use(bodyParser.urlencoded({extended:false}))
     .get('/', onadd) //dit is de 'homepage' hier vult de gebruik zijn info in. 
@@ -32,6 +32,7 @@ function onadd(req, res) {
     res.render('newprofile.ejs');
 }
 
+//Laat alle profiles zien
 function onprofiles(req, res) { 
 
     db.collection('profiles') //pakt de collection profiles uit de db
@@ -92,6 +93,27 @@ function showprofile(req, res) {
     }
 }
 
+//zoekt profiel en redirect naar het aanpassen van profiel
+function onedit(req, res) {
+
+    const id = req.params.id;
+
+    db.collection('profiles').findOne({
+        _id: mongo.ObjectID(id),
+    }, done);
+
+    function done(err, data) {
+        if (err) {
+            next(err);
+        } else {
+            res.render('edit-profile.ejs', { 
+                profile: data
+            });
+        }
+    }
+}
+
+// Editen en opslaan van profiel
 function saveprofile(req, res) {
 
     const id = req.body.profile_id; //pakken de id uit de hidden input field om die te updaten.
@@ -112,6 +134,10 @@ function saveprofile(req, res) {
     res.redirect('/profile/' + id);
 }
 
+
+
+
+//Deleten van profiel
 function ondeleteprofile(req, res) {
     
     const id = req.params.id;
@@ -129,24 +155,6 @@ function ondeleteprofile(req, res) {
     }
 }
 
-function onedit(req, res) {
-
-    const id = req.params.id;
-
-    db.collection('profiles').findOne({
-        _id: mongo.ObjectID(id),
-    }, done);
-
-    function done(err, data) {
-        if (err) {
-            next(err);
-        } else {
-            res.render('edit-profile.ejs', { 
-                profile: data
-            });
-        }
-    }
-}
 
 function on404(req, res) { 
     res.status(404).send('dit is een 404');
