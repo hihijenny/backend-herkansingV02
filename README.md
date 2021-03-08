@@ -6,12 +6,15 @@ Voor backend moet ik een feature voor een datingapp uitwerken, met mijn feature 
 ### Installatie
 
 Clone mijn repository
+
 `gh repo clone hihijenny/backend-herkansingV02`
 
 Ga naar de map
+
 `cd /backend-herkansingV02`
 
 Installeer de benodigde packages
+
 `npm install`
 
 Maak een mongoDB database
@@ -22,9 +25,9 @@ Plaats de .env file in de map en zet hier de juiste variabele in
 DB_NAME= Naam van jouw database
 DB_PASS= Wachtwoord 
 DB_USER= Gebruikersnaam
-
 ```
 Start de server 
+
 `npm start`
 
 #### Auteur
