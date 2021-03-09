@@ -1,12 +1,12 @@
 const express = require('express');
 const ejs = require('ejs');
 const bodyParser = require('body-parser');
-const mongo = require('mongodb')
+const mongo = require('mongodb');
 
 require('dotenv').config(); //Variabele in je .env zetten die niet mee gaat naar git maar wel kunnen ophalen in de code.
 
 let db = null;
-const url = 'mongodb+srv://' + process.env.DB_USER + ':'+process.env.DB_PASS + '@cluster0.q5sp8.mongodb.net/' + process.env.DB_NAME + '?retryWrites=true&w=majority';
+const url = 'mongodb+srv://' + process.env.DB_USER + ':' + process.env.DB_PASS + '@cluster0.q5sp8.mongodb.net/' + process.env.DB_NAME + '?retryWrites=true&w=majority';
 
 mongo.MongoClient.connect(url, function(err, client) {
     if (err) throw err; 
@@ -31,7 +31,7 @@ express()
 function onadd(req, res) {
     res.render('newprofile.ejs');
 }
-
+ 
 //Laat alle profiles zien
 function onprofiles(req, res) { 
 
@@ -44,7 +44,7 @@ function onprofiles(req, res) {
         } else {
              
             res.render('profiles.ejs', { //render de template en geeft profiles mee als argument
-                profiles: data
+                profiles: data //profiles geven we mee aan de ejs template
             });
         }
     }
@@ -59,22 +59,23 @@ function submit(req, res) {
 
     db.collection('profiles') //pakt de collection profiles uit de db
         .insert({
-            name: name, //zet het antwoord van de gebruiker in de database
+            name: name, //maken een json object die we in de database zetten
             interest1: interest1,
             interest2: interest2,
             about: about
         }, done);
 
-        function done(err, data) {
-            if (err) {
-                next(err);
-            } else {
-               const id = data.insertedIds[0];
-               res.redirect('/profile/' + id); //redirect naar profile pagina + de Id 
-            }
+    function done(err, data) {
+        if (err) {
+            next(err);
+        } else {
+            const id = data.insertedIds[0];   
+            res.redirect('/profile/' + id); //redirect naar profile pagina + de Id 
         }
+    }
 }
 
+//Laat een profiel zien
 function showprofile(req, res) {
     const id = req.params.id; //pak de Id uit de URL 
 
@@ -93,7 +94,7 @@ function showprofile(req, res) {
     }
 }
 
-//zoekt profiel en redirect naar het aanpassen van profiel
+//als je je profiel wil aanpassen
 function onedit(req, res) {
 
     const id = req.params.id;
@@ -107,7 +108,7 @@ function onedit(req, res) {
             next(err);
         } else {
             res.render('edit-profile.ejs', { 
-                profile: data
+                profile: data //vult de data in die we al hebben
             });
         }
     }
@@ -116,7 +117,7 @@ function onedit(req, res) {
 // Editen en opslaan van profiel
 function saveprofile(req, res) {
 
-    const id = req.body.profile_id; //pakken de id uit de hidden input field om die te updaten.
+    const id = req.body.profile_id; //pakken de id uit de hidden input field om die te updaten. Omdat .post. 
     const interest1 = req.body.interest1;
     const interest2 = req.body.interest2;
     const about = req.body.about;
