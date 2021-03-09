@@ -11,6 +11,7 @@ Dit is hoe mijn feature er op dit moment uit ziet
 Wil je deze feature ook lokaal op jouw pc hebben, volg dan de volgende stappen.
 Zorg er voor dat je voorafgaand al NodeJS en NPM hebt geïnstalleerd.
 
+### Clonen en installeren van mijn repo
 1. Clone of download mijn repository
 
 `gh repo clone hihijenny/backend-herkansingV02`
@@ -25,7 +26,7 @@ Zorg er voor dat je voorafgaand al NodeJS en NPM hebt geïnstalleerd.
 
 `npm install`
 
-
+### Opzetten van de database
 4. Om de feature werkend te kijgen moet je ook een MongoDB database aanmaken,
 mijn cluster ziet er zo uit: 
 ![](static/datamodel.png)
