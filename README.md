@@ -2,6 +2,7 @@
 Met mijn datingapp kan de gebruiker door zijn/haar liefde voor voedsel de ideale partner vinden. 
 In de feature die ik heb uitgewerkt voor dit project kunnen zij hun naam invoeren, hun twee favoriete gerechten
 en een beschrijving over zichzelf en natuurlijk vooral waarom zij zo leuk zijn.  
+![](static/my-app.png)
 
 ### Installatie
 Wil je deze feature ook lokaal op jouw pc hebben, volg dan de volgende stappen.
