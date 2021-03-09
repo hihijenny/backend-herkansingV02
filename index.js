@@ -19,7 +19,7 @@ express()
     .set('views', 'view')   //aangeven in welke map de templates staan
     .use(bodyParser.urlencoded({extended:false}))
     .get('/', onadd) //dit is de 'homepage' hier vult de gebruik zijn info in. 
-    .post('/add', submit) // Na verzenden van fomrulier kom je hier, voert submit functie uit. 
+    .post('/add', submit) // Na verzenden van formulier kom je hier, voert submit functie uit. 
     .get('/profile/:id', showprofile) //Laat een specifiek profiel zien op basis van Id
     .get('/profiles', onprofiles) //Laat alle profielen zien
     .get('/delete-profile/:id', ondeleteprofile) //Delete een specifiek profiel op basis van Id
